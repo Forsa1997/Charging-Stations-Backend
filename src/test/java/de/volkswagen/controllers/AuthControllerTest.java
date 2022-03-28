@@ -10,8 +10,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -21,7 +24,7 @@ public class AuthControllerTest  {
     private MockMvc mockMvc;
 
     @Test
-    void canSingIn() throws Exception {
+    void canSignIn() throws Exception {
         mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\":\"user1\",\"password\":\"password\",\"email\":\"user1@test.de\"}"))
                         .andExpect(status().isOk());
@@ -56,6 +59,15 @@ public class AuthControllerTest  {
                         .content("{\"username\":\"admin1\",\"password\":\"password\",\"email\":\"admin@admin.de\",\"role\":[\"ROLE_ADMIN\"]}"))
                         .andExpect(status().isOk())
                         .andExpect(MockMvcResultMatchers.content().json("{\"message\":\"User registered successfully with Roles: [ROLE_ADMIN]\"}"));
-
     }
+
+    @Test
+    @WithMockUser
+    void canModify() throws Exception {
+        mockMvc.perform(patch("/patch").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":\"1\",\"firstName\":\"first\",\"lastName\":\"last\",\"username\":\"user3\",\"email\":\"user5@test.de\"}"))
+                        .andExpect(status().isOk());
+    }
+
+
 }

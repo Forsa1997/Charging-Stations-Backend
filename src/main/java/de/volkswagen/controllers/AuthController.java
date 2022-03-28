@@ -1,22 +1,22 @@
 package de.volkswagen.controllers;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
+
+import de.volkswagen.payload.request.PatchRequest;
+import de.volkswagen.payload.response.ProfileResponse;
+import net.bytebuddy.pool.TypePool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import de.volkswagen.models.ERole;
 import de.volkswagen.models.Role;
 import de.volkswagen.models.User;
@@ -110,5 +110,25 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("User registered successfully with Roles: " + strRoles));
+    }
+
+    @PatchMapping("/patch")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> modifyUser(@Valid @RequestBody PatchRequest patchRequest) {
+        System.out.println(patchRequest);
+        Optional<User> optionalUser = userRepository.findById(patchRequest.getId());
+        System.out.println();
+        try {
+            User currentUser = optionalUser.get();
+                currentUser.setFirstName(patchRequest.getFirstName());
+                currentUser.setLastName(patchRequest.getLastName());
+                currentUser.setEmail(patchRequest.getEmail());
+                currentUser.setUsername(patchRequest.getUsername());
+            userRepository.save(currentUser);
+            ProfileResponse profileResponse = new ProfileResponse(currentUser.getId(), currentUser.getFirstName(), currentUser.getLastName(), currentUser.getUsername(), currentUser.getEmail(), currentUser.getRoles());
+            return ResponseEntity.ok(profileResponse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

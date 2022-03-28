@@ -32,7 +32,7 @@ public class ContentController {
 
     @GetMapping("/profile")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<?> hello(@CurrentSecurityContext(expression = "authentication.name")
+    public ResponseEntity<?> getUserProfile(@CurrentSecurityContext(expression = "authentication.name")
                                            String username) {
 
         Optional<User> optionalUser = userRepository.findByUsername(username);
