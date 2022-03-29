@@ -74,8 +74,17 @@ public class AuthControllerTest  {
     @Test
     @WithMockUser
     void canChangeThePassword() throws Exception {
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"user1\",\"password\":\"password\",\"email\":\"user1@test.de\"}"))
+                .andExpect(status().isOk());
+        MvcResult result = mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"user1\",\"password\":\"password\"}"))
+                .andExpect(status().isOk()).andReturn();
+        String resultString = result.getResponse().getContentAsString();
+        JacksonJsonParser jsonParser = new JacksonJsonParser();
+        String id = jsonParser.parseMap(resultString).get("id").toString();
         mockMvc.perform(patch("/password").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":\"1\",\"oldPassword\":\"pass\",\"newPassword\":\"newpass\"}"))
+                        .content("{\"id\":\" " + id+ " \",\"oldPassword\":\"password\",\"newPassword\":\"newpass\"}"))
                 .andExpect(status().isOk());
     }
 

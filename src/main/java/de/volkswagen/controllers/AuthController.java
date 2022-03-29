@@ -4,14 +4,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 
+import de.volkswagen.payload.request.PasswordChangeRequest;
 import de.volkswagen.payload.request.PatchRequest;
 import de.volkswagen.payload.response.ProfileResponse;
+import de.volkswagen.security.WebSecurityConfig;
 import net.bytebuddy.pool.TypePool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.authentication.PasswordEncoderParser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +31,9 @@ import de.volkswagen.repository.RoleRepository;
 import de.volkswagen.repository.UserRepository;
 import de.volkswagen.security.jwt.JwtUtils;
 import de.volkswagen.security.services.UserDetailsImpl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class AuthController {
@@ -127,6 +133,25 @@ public class AuthController {
             return ResponseEntity.ok(profileResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PatchMapping("/password")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody PasswordChangeRequest request) {
+        Optional<User> optionalUser = userRepository.findById(request.getId());
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        try {
+            User currentUser = optionalUser.get();
+            if (passwordEncoder.matches(request.getOldPassword(),currentUser.getPassword())) {
+                currentUser.setPassword(request.getNewPassword());
+                userRepository.save(currentUser);
+                return ResponseEntity.ok("Password succesfully changed");
+            } else {
+               return ResponseEntity.badRequest().body("Old password did not match");
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Password criteria not fullfilled ");
         }
     }
 
