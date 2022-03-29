@@ -115,9 +115,7 @@ public class AuthController {
     @PatchMapping("/patch")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> modifyUser(@Valid @RequestBody PatchRequest patchRequest) {
-        System.out.println(patchRequest);
         Optional<User> optionalUser = userRepository.findById(patchRequest.getId());
-        System.out.println();
         try {
             User currentUser = optionalUser.get();
                 currentUser.setFirstName(patchRequest.getFirstName());
@@ -131,4 +129,5 @@ public class AuthController {
             return ResponseEntity.badRequest().build();
         }
     }
+
 }

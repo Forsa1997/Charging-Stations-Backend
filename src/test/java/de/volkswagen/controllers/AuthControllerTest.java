@@ -2,11 +2,13 @@ package de.volkswagen.controllers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -68,6 +70,35 @@ public class AuthControllerTest  {
                         .content("{\"id\":\"1\",\"firstName\":\"first\",\"lastName\":\"last\",\"username\":\"user3\",\"email\":\"user5@test.de\"}"))
                         .andExpect(status().isOk());
     }
+
+    @Test
+    @WithMockUser
+    void canChangeThePassword() throws Exception {
+        mockMvc.perform(patch("/password").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":\"1\",\"oldPassword\":\"pass\",\"newPassword\":\"newpass\"}"))
+                .andExpect(status().isOk());
+    }
+
+
+
+
+/*    @Test
+    void canModifyForREAL() throws Exception {
+        mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"user1\",\"password\":\"password\",\"email\":\"user1@test.de\"}"))
+                .andExpect(status().isOk());
+        MvcResult result = mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"user1\",\"password\":\"password\"}"))
+                .andExpect(status().isOk()).andReturn();
+        String resultString = result.getResponse().getContentAsString();
+        JacksonJsonParser jsonParser = new JacksonJsonParser();
+        String accessToken = jsonParser.parseMap(resultString).get("accessToken").toString();
+
+        mockMvc.perform(patch("/patch").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":3,\"firstName\":\"changed\",\"lastName\":\"last\",\"username\":\"user1\",\"email\":\"email\",\"roles\":[\"ROLE_USER\"],\"accessToken\":\" " + accessToken+ "\",\"tokenType\":\"Bearer\"}"))
+                .andExpect(status().isOk());
+    }*/
+
 
 
 }
