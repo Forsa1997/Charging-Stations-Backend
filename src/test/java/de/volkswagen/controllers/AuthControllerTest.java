@@ -86,6 +86,9 @@ public class AuthControllerTest  {
         mockMvc.perform(patch("/password").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":\" " + id+ " \",\"oldPassword\":\"password\",\"newPassword\":\"newpass\"}"))
                 .andExpect(status().isOk());
+       mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"user7\",\"password\":\"newpass\"}"))
+                .andExpect(status().isOk());
     }
 
 

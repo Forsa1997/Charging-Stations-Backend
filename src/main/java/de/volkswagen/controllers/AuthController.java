@@ -144,7 +144,7 @@ public class AuthController {
         try {
             User currentUser = optionalUser.get();
             if (passwordEncoder.matches(request.getOldPassword(),currentUser.getPassword())) {
-                currentUser.setPassword(request.getNewPassword());
+                currentUser.setPassword(passwordEncoder.encode(request.getNewPassword()));
                 userRepository.save(currentUser);
                 return ResponseEntity.ok("Password succesfully changed");
             } else {
