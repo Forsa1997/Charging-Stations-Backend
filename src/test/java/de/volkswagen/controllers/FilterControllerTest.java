@@ -18,8 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,6 +60,24 @@ public class FilterControllerTest {
         mockMvc.perform(post("/filter").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"mocktest\",\"userId\":\"2\",\"filterFreeToUse\":[\"yes\"],\"filterOperator\":[\"36,180,3463\"]}"))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/filter")).andExpect(status().isOk()).andDo(print());
+        mockMvc.perform(get("/filter")).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username="admin",roles={"USER","ADMIN"})
+    void canDeleteFilter() throws Exception {
+        mockMvc.perform(post("/filter").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"mocktest1\",\"userId\":\"2\",\"filterFreeToUse\":[\"yes\"],\"filterOperator\":[\"36,180,3463\"]}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(delete("/filter").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"mocktest1\"}")).andExpect(status().isOk());
+        mockMvc.perform(get("/filter")).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username="admin",roles={"USER","ADMIN"})
+    void errorWhenTryingToDeleteNonExistantFilter() throws Exception {
+        mockMvc.perform(delete("/filter").contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"mocktest1\"}")).andExpect(status().isBadRequest());
     }
 }

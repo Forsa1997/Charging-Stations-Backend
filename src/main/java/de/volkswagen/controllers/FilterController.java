@@ -8,12 +8,15 @@ import de.volkswagen.payload.response.MessageResponse;
 import de.volkswagen.repository.FilterRepository;
 import de.volkswagen.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -29,6 +32,7 @@ public class FilterController {
     }
 
     @PostMapping("/filter")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> saveFilter(@Valid @RequestBody FilterRequest filterRequest) {
         Long userId = filterRequest.getUserId();
         if (userRepository.existsById(userId)) {
@@ -51,6 +55,7 @@ public class FilterController {
     }
 
     @GetMapping("/filter")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> loadFilter(@CurrentSecurityContext(expression = "authentication.name")
                                                     String username) {
 
@@ -61,6 +66,21 @@ public class FilterController {
             return ResponseEntity.ok(filterResponse);
         } catch (NoSuchElementException e) {
             return ResponseEntity.badRequest().body("User does not exist!");
+        }
+    }
+
+    @DeleteMapping("/filter")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> deleteFilter(@Valid @RequestBody FilterRequest filterRequest, @CurrentSecurityContext(expression = "authentication.name")
+            String username) {
+
+        User currentUser = userRepository.findByUsername(username).get();
+        List<Filter> toDelete = currentUser.getFilters().stream().filter(filter -> filter.getName().equals(filterRequest.getName())).collect(Collectors.toList());
+        if (toDelete.size() > 0){
+            filterRepository.deleteAll(toDelete);
+            return ResponseEntity.ok().body("Filter has been deleted!");
+        } else {
+            return ResponseEntity.badRequest().body("No such filter found!");
         }
     }
 
