@@ -39,6 +39,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(mappedBy="user")
+    private Set<Filter> filters;
+
     public User() {
     }
     public User(String firstName, String lastName, String username, String email, String password) {
@@ -47,6 +50,13 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public Set<Filter> getFilters() {
+        return filters;
+    }
+    public void setFilters(Set<Filter> filters) {
+        this.filters = filters;
     }
 
     public Long getId() {

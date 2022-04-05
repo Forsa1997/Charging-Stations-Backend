@@ -1,4 +1,5 @@
 
+drop table filters if exists;
 drop table user_roles if exists;
 drop table roles if exists;
 drop table users if exists;

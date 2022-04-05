@@ -32,7 +32,7 @@ import de.volkswagen.repository.UserRepository;
 import de.volkswagen.security.jwt.JwtUtils;
 import de.volkswagen.security.services.UserDetailsImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
