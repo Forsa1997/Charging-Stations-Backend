@@ -31,60 +31,36 @@ public class FilterControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    UserRepository localMockRepository;
+   /* @MockBean
+    UserRepository localMockRepository;*/
 
 
 
     @Test
     @WithMockUser
     void ReturnsErrorWhenFilterNameIsAlreadyUsed() throws Exception {
-        User mockUser = new User();
-        Filter mockFilter = new Filter();
-        mockFilter.setName("mock");
-        Set<Filter> mockFilters = new HashSet<>();
-        mockFilters.add(mockFilter);
-        mockUser.setFilters(mockFilters);
-        mockUser.setId(1L);
-        when(localMockRepository.getById(1L)).thenReturn(mockUser);
-        when(localMockRepository.existsById(1L)).thenReturn(true);
         mockMvc.perform(post("/filter").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"mock\",\"userId\":\"1\",\"filterFreeToUse\":[\"yes\"],\"filterOperator\":[\"36,180,3463\"]}"))
-                .andExpect(status().isBadRequest());
+                        .andExpect(status().isOk());
+        mockMvc.perform(post("/filter").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"mock\",\"userId\":\"1\",\"filterFreeToUse\":[\"yes\"],\"filterOperator\":[\"36,180,3463\"]}"))
+                         .andExpect(status().isBadRequest());
     }
 
     @Test
     @WithMockUser
     void canSaveFilter() throws Exception {
-        User mockUser = new User();
-        Filter mockFilter = new Filter();
-        mockFilter.setName("mock");
-        Set<Filter> mockFilters = new HashSet<>();
-        mockFilters.add(mockFilter);
-        mockUser.setFilters(mockFilters);
-        mockUser.setId(1L);
-        when(localMockRepository.getById(1L)).thenReturn(mockUser);
-        when(localMockRepository.existsById(1L)).thenReturn(true);
         mockMvc.perform(post("/filter").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"myFilter\",\"userId\":\"1\",\"filterFreeToUse\":[\"yes\"],\"filterOperator\":[\"36,180,3463\"]}"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(username="mockName",roles={"USER","ADMIN"})
+    @WithMockUser(username="admin",roles={"USER","ADMIN"})
     void canLoadFilter() throws Exception {
-        User mockUser = new User();
-        Filter mockFilter = new Filter();
-        mockFilter.setName("mock");
-        Set<Filter> mockFilters = new HashSet<>();
-        mockFilters.add(mockFilter);
-        mockUser.setFilters(mockFilters);
-        mockUser.setId(1L);
-        mockUser.setUsername("mockName");
-        when(localMockRepository.findByUsername("mockName")).thenReturn(Optional.of(mockUser));
+        mockMvc.perform(post("/filter").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"mocktest\",\"userId\":\"2\",\"filterFreeToUse\":[\"yes\"],\"filterOperator\":[\"36,180,3463\"]}"))
+                .andExpect(status().isOk());
         mockMvc.perform(get("/filter")).andExpect(status().isOk()).andDo(print());
     }
-
-
-
 }

@@ -1,5 +1,7 @@
 package de.volkswagen.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -20,8 +22,23 @@ public class Filter {
     private int filterKw;
     private String[] filterPlugtype;
     private String[] filterOperator;
+    private String[] filterFreeToUse;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @JoinColumn(name="user_id", nullable=false)
+    private User user;
 
     public Filter() {
+    }
+
+    public Filter(String name, int filterKw, String[] filterPlugtype, String[] filterOperator, String[] filterFreeToUse, User user) {
+        this.name = name;
+        this.filterKw = filterKw;
+        this.filterPlugtype = filterPlugtype;
+        this.filterOperator = filterOperator;
+        this.filterFreeToUse = filterFreeToUse;
+        this.user = user;
     }
 
     public Long getId() {
@@ -72,16 +89,12 @@ public class Filter {
         this.filterFreeToUse = filterFreeToUse;
     }
 
-    public User getUser() {
-        return user;
+    public long getUser() {
+        return this.user.getId();
     }
 
     public void setUser(User user) {
         this.user = user;
     }
 
-    private String[] filterFreeToUse;
-    @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
-    private User user;
 }

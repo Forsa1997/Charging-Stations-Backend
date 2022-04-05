@@ -1,5 +1,7 @@
 package de.volkswagen.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -39,7 +41,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="user")
+    @JsonManagedReference
     private Set<Filter> filters;
 
     public User() {
@@ -114,4 +117,5 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
 }

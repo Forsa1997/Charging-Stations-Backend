@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -37,14 +37,19 @@ public class FilterController {
         Long userId = filterRequest.getUserId();
         if (userRepository.existsById(userId)) {
             User user = userRepository.getById(userId);
-
             for (Filter filter:user.getFilters()){
                 if (filter.getName().equals(filterRequest.getName())){
                     return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
-                } else {
-                    return ResponseEntity.ok(new MessageResponse("Filter succsessfully safed!"));
                 }
             }
+            Filter newFilter = new Filter(filterRequest.getName(),filterRequest.getFilterKw(), filterRequest.getFilterPlugtype(), filterRequest.getFilterOperator(), filterRequest.getFilterFreeToUse(), user);
+            filterRepository.save(newFilter);
+
+            /*Set<Filter> filterSet = user.getFilters();
+            filterSet.add(newFilter);
+            user.setFilters(filterSet);
+            userRepository.save(user);*/
+            return ResponseEntity.ok(new MessageResponse("Filter succsessfully safed!"));
         }
         return ResponseEntity.badRequest().body(new MessageResponse("Error: UserId does not exist!"));
     }
