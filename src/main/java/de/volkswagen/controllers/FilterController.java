@@ -1,13 +1,10 @@
 package de.volkswagen.controllers;
 
-import de.volkswagen.models.ERole;
 import de.volkswagen.models.Filter;
-import de.volkswagen.models.Role;
 import de.volkswagen.models.User;
 import de.volkswagen.payload.request.FilterRequest;
 import de.volkswagen.payload.response.FilterResponse;
 import de.volkswagen.payload.response.MessageResponse;
-import de.volkswagen.payload.response.ProfileResponse;
 import de.volkswagen.repository.FilterRepository;
 import de.volkswagen.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +12,6 @@ import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
