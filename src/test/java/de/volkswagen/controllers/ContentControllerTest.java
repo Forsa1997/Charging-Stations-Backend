@@ -59,4 +59,12 @@ public class ContentControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
+//    @Test
+//    void callStations() throws Exception {
+//        ScheduledDataCall dc = new ScheduledDataCall();
+//        dc.openChargeMapApiCall();
+//        mockMvc.perform(get("/stations"))
+//                .andExpect(status().isOk()).andDo(print());
+//    }
+
 }

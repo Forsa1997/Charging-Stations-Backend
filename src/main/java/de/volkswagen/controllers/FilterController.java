@@ -39,7 +39,7 @@ public class FilterController {
             User user = userRepository.getById(userId);
             for (Filter filter:user.getFilters()){
                 if (filter.getName().equals(filterRequest.getName())){
-                    return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+                    return ResponseEntity.badRequest().body(new MessageResponse("Error: Filtername already exists"));
                 }
             }
             Filter newFilter = new Filter(filterRequest.getName(),filterRequest.getFilterKw(), filterRequest.getFilterPlugtype(), filterRequest.getFilterOperator(), filterRequest.getFilterFreeToUse(), user);

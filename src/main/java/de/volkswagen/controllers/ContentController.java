@@ -1,6 +1,9 @@
 package de.volkswagen.controllers;
 
 import de.volkswagen.models.User;
+import de.volkswagen.models.api.BasicStationData;
+import de.volkswagen.models.api.DataStorage;
+import de.volkswagen.models.api.StationData;
 import de.volkswagen.payload.response.ProfileResponse;
 import de.volkswagen.repository.RoleRepository;
 import de.volkswagen.repository.UserRepository;
@@ -11,6 +14,7 @@ import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -34,7 +38,6 @@ public class ContentController {
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> getUserProfile(@CurrentSecurityContext(expression = "authentication.name")
                                            String username) {
-
         Optional<User> optionalUser = userRepository.findByUsername(username);
         try {
             User currentUser = optionalUser.get();
@@ -43,6 +46,16 @@ public class ContentController {
         } catch (NoSuchElementException e) {
             return ResponseEntity.badRequest().build();
         }
-
     }
+
+    @GetMapping("/stations")
+    public ResponseEntity<List<BasicStationData>> getStations()  {
+        try {
+            return ResponseEntity.ok(DataStorage.getData());
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
 }
