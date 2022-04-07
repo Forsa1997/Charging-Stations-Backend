@@ -1,8 +1,11 @@
 package de.volkswagen.models.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 import java.util.Map;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class StationData {
 
     private long id;
