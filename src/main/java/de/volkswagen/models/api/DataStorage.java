@@ -12,6 +12,7 @@ public class DataStorage {
     };
 
     public static void saveData(List<BasicStationData> data){
-        storedData = data;
+        storedData.clear();
+        storedData.addAll(data);
     };
 }
