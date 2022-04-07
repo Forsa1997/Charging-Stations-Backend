@@ -31,7 +31,7 @@ public class ScheduledDataCall {
             final HttpHeaders headers = new HttpHeaders();
             headers.set("User-Agent", "chargingStations");
             final HttpEntity<String> entity = new HttpEntity<String>(headers);
-            final String uri = "https://api.openchargemap.io/v3/poi/?output=json&countrycode=DE&camelcase=true&maxresults=10&compact=true&verbose=false&key=326ba9d9-34a9-4031-9408-c17a289623b2";
+            final String uri = "https://api.openchargemap.io/v3/poi/?output=json&countrycode=DE&camelcase=true&maxresults=1000000&compact=true&verbose=false&key=326ba9d9-34a9-4031-9408-c17a289623b2";
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<StationData[]> result = restTemplate.exchange(uri, HttpMethod.GET, entity, StationData[].class);
             StationData[] data = result.getBody();
