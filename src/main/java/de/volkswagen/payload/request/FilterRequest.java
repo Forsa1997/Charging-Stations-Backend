@@ -13,7 +13,7 @@ public class FilterRequest {
     private int filterKw;
     private String[] filterPlugtype;
     private String[] filterOperator;
-    private String[] filterFreeToUse;
+    private String filterFreeToUse;
 
     public String getName() {
         return name;
@@ -55,11 +55,11 @@ public class FilterRequest {
         this.filterOperator = filterOperator;
     }
 
-    public String[] getFilterFreeToUse() {
+    public String getFilterFreeToUse() {
         return filterFreeToUse;
     }
 
-    public void setFilterFreeToUse(String[] filterFreeToUse) {
+    public void setFilterFreeToUse(String filterFreeToUse) {
         this.filterFreeToUse = filterFreeToUse;
     }
 }

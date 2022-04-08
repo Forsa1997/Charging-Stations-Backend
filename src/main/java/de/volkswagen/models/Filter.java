@@ -22,7 +22,7 @@ public class Filter {
     private int filterKw;
     private String[] filterPlugtype;
     private String[] filterOperator;
-    private String[] filterFreeToUse;
+    private String filterFreeToUse;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
@@ -32,7 +32,7 @@ public class Filter {
     public Filter() {
     }
 
-    public Filter(String name, int filterKw, String[] filterPlugtype, String[] filterOperator, String[] filterFreeToUse, User user) {
+    public Filter(String name, int filterKw, String[] filterPlugtype, String[] filterOperator, String filterFreeToUse, User user) {
         this.name = name;
         this.filterKw = filterKw;
         this.filterPlugtype = filterPlugtype;
@@ -81,11 +81,11 @@ public class Filter {
         this.filterOperator = filterOperator;
     }
 
-    public String[] getFilterFreeToUse() {
+    public String getFilterFreeToUse() {
         return filterFreeToUse;
     }
 
-    public void setFilterFreeToUse(String[] filterFreeToUse) {
+    public void setFilterFreeToUse(String filterFreeToUse) {
         this.filterFreeToUse = filterFreeToUse;
     }
 
