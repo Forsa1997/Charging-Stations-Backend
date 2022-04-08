@@ -39,10 +39,10 @@ public class FilterControllerTest {
     @WithMockUser
     void ReturnsErrorWhenFilterNameIsAlreadyUsed() throws Exception {
         mockMvc.perform(post("/filter").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"mock\",\"userId\":\"1\",\"filterFreeToUse\":[\"yes\"],\"filterOperator\":[\"36,180,3463\"]}"))
+                        .content("{\"name\":\"mock\",\"userId\":\"1\",\"filterFreeToUse\":\"yes\",\"filterOperator\":[\"36,180,3463\"]}"))
                         .andExpect(status().isOk());
         mockMvc.perform(post("/filter").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"mock\",\"userId\":\"1\",\"filterFreeToUse\":[\"yes\"],\"filterOperator\":[\"36,180,3463\"]}"))
+                        .content("{\"name\":\"mock\",\"userId\":\"1\",\"filterFreeToUse\":\"yes\",\"filterOperator\":[\"36,180,3463\"]}"))
                          .andExpect(status().isBadRequest());
     }
 
@@ -50,7 +50,7 @@ public class FilterControllerTest {
     @WithMockUser
     void canSaveFilter() throws Exception {
         mockMvc.perform(post("/filter").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"myFilter\",\"userId\":\"1\",\"filterFreeToUse\":[\"yes\"],\"filterOperator\":[\"36,180,3463\"]}"))
+                        .content("{\"name\":\"myFilter\",\"userId\":\"1\",\"filterFreeToUse\":\"yes\",\"filterOperator\":[\"36,180,3463\"]}"))
                 .andExpect(status().isOk());
     }
 
@@ -58,7 +58,7 @@ public class FilterControllerTest {
     @WithMockUser(username="admin",roles={"USER","ADMIN"})
     void canLoadFilter() throws Exception {
         mockMvc.perform(post("/filter").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"mocktest\",\"userId\":\"2\",\"filterFreeToUse\":[\"yes\"],\"filterOperator\":[\"36,180,3463\"]}"))
+                        .content("{\"name\":\"mocktest\",\"userId\":\"2\",\"filterFreeToUse\":\"yes\",\"filterOperator\":[\"36,180,3463\"]}"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/filter")).andExpect(status().isOk());
     }
@@ -67,7 +67,7 @@ public class FilterControllerTest {
     @WithMockUser(username="admin",roles={"USER","ADMIN"})
     void canDeleteFilter() throws Exception {
         mockMvc.perform(post("/filter").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"mocktest1\",\"userId\":\"2\",\"filterFreeToUse\":[\"yes\"],\"filterOperator\":[\"36,180,3463\"]}"))
+                        .content("{\"name\":\"mocktest1\",\"userId\":\"2\",\"filterFreeToUse\":\"yes\",\"filterOperator\":[\"36,180,3463\"]}"))
                 .andExpect(status().isOk());
         mockMvc.perform(delete("/filter").contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"mocktest1\"}")).andExpect(status().isOk());
