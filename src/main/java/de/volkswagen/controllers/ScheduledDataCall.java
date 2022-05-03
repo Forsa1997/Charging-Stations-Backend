@@ -21,10 +21,12 @@ import java.util.Map;
 @Component
 public class ScheduledDataCall {
 
-    private List<BasicStationData> basicStationData = new ArrayList<>();
+
 
     @Scheduled(fixedRate = 86400000)
     public void openChargeMapApiCall() {
+
+        List<BasicStationData> basicStationData = new ArrayList<>();
 
         try {
             System.out.println("Trying to call the API");
@@ -41,11 +43,5 @@ public class ScheduledDataCall {
         } catch (Exception e) {
             DataStorage.generateDataFromJSON();
         }
-
-
-
-
-
-
     }
 }
